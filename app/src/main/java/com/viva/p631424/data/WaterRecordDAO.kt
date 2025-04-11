@@ -9,7 +9,7 @@ import java.time.LocalDate
 @Dao
 interface WaterRecordDAO {
     @Insert
-    fun insert(waterRecord: WaterRecord)
+    suspend fun insert(waterRecord: WaterRecord)
 
     @Query("SELECT * FROM water_records631424 ORDER BY timestamp DESC")
     fun getAllWaterRecords(): LiveData<List<WaterRecord>>
@@ -17,6 +17,6 @@ interface WaterRecordDAO {
     @Query("SELECT * FROM water_records631424 WHERE DATE(timestamp) = :date ORDER BY timestamp DESC")
     fun getWaterRecordsByDate(date: LocalDate): LiveData<List<WaterRecord>>
 
-    @Query("SELECT SUM(cup) FROM water_records631424 WHERE DATE(timestamp) = :date")
+    @Query("SELECT COALESCE(SUM(cup), 0.0) FROM water_records631424 WHERE DATE(timestamp) = :date")
     fun getTotalCupsByDate(date: LocalDate): LiveData<Float>
 }

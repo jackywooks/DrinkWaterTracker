@@ -18,6 +18,11 @@ class WaterRecordViewModel(private val database: AppDatabase) : ViewModel() {
     fun getTotalCupsByDate(date: LocalDate): LiveData<Float> {
         return database.waterRecordDao().getTotalCupsByDate(date)
     }
+
+    fun addWaterRecord(cups: Float) = viewModelScope.launch {
+        val newRecord = WaterRecord(cup = cups)
+        database.waterRecordDao().insert(newRecord)
+    }
 }
 
 class WaterRecordViewModelFactory(private val database: AppDatabase) : ViewModelProvider.Factory {
