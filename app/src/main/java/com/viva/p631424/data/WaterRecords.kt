@@ -3,7 +3,6 @@ package com.viva.p631424.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
-import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

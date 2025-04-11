@@ -24,6 +24,12 @@ import java.time.LocalDate
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewModelScope
+import com.viva.p631424.data.WaterRecord
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 
 class Dashboard631424 : ComponentActivity() {
@@ -39,6 +45,8 @@ class Dashboard631424 : ComponentActivity() {
                 }
             }
         }
+        // Insert dummy records
+        insertDummyRecords()
     }
 
     @Composable
@@ -67,6 +75,9 @@ class Dashboard631424 : ComponentActivity() {
                 viewModel.addWaterRecord(cups)
             }
         }
+
+        // access the current context
+        val context = LocalContext.current
 
         Column(
             modifier = Modifier
@@ -135,11 +146,34 @@ class Dashboard631424 : ComponentActivity() {
                 }
 
                 Button(
-                    onClick = { /* TODO: Add action */ },
+                    onClick = {
+                        val intent = Intent(context, History631424::class.java)
+                        context.startActivity(intent)
+                    },
                     modifier = Modifier.align(Alignment.BottomCenter)
                 ) {
                     Text("History")
                 }
+            }
+        }
+    }
+
+    private fun insertDummyRecords() {
+        val database = DatabaseProvider.getDatabase(application)
+        val viewModel = WaterRecordViewModel(database)
+
+        // Define some dummy records
+        val dummyRecords = listOf(
+            WaterRecord(cup = 2.0f, timestamp = LocalDateTime.now().minusDays(1)),
+            WaterRecord(cup = 3.5f, timestamp = LocalDateTime.now().minusDays(2)),
+            WaterRecord(cup = 1.0f, timestamp = LocalDateTime.now().minusDays(3)),
+            WaterRecord(cup = 4.0f, timestamp = LocalDateTime.now().minusDays(4))
+        )
+
+        // Insert records in a coroutine
+        viewModel.viewModelScope.launch {
+            dummyRecords.forEach { record ->
+                viewModel.insert(record)
             }
         }
     }

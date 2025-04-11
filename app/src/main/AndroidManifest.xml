@@ -22,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".History631424"
+            android:exported="true"
+            android:theme="@style/Theme.VivaProject" />
     </application>
 
 </manifest>
